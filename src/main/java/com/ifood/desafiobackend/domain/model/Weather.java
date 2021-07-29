@@ -51,4 +51,48 @@ public final class Weather {
     public int hashCode() {
         return Objects.hash(id);
     }
+
+    public static final class WeatherBuilder {
+        private UUID id;
+        private String cityName;
+        private Temperature temperature;
+        private String weatherDescription;
+        private Wind wind;
+
+        private WeatherBuilder() {
+        }
+
+        public static WeatherBuilder aWeather() {
+            return new WeatherBuilder();
+        }
+
+        public WeatherBuilder withId(UUID id) {
+            this.id = id;
+            return this;
+        }
+
+        public WeatherBuilder withCityName(String cityName) {
+            this.cityName = cityName;
+            return this;
+        }
+
+        public WeatherBuilder withTemperature(Temperature temperature) {
+            this.temperature = temperature;
+            return this;
+        }
+
+        public WeatherBuilder withWeatherDescription(String weatherDescription) {
+            this.weatherDescription = weatherDescription;
+            return this;
+        }
+
+        public WeatherBuilder withWind(Wind wind) {
+            this.wind = wind;
+            return this;
+        }
+
+        public Weather build() {
+            return new Weather(id, cityName, temperature, weatherDescription, wind);
+        }
+    }
 }
