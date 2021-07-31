@@ -17,6 +17,22 @@ public class OpenWeatherReponseDTO {
         this.wind = wind;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public List<WeatherDTO> getWeather() {
+        return weather;
+    }
+
+    public MainDataDTO getMain() {
+        return main;
+    }
+
+    public WindDTO getWind() {
+        return wind;
+    }
+
     @Override
     public String toString() {
         return new StringJoiner(", ", OpenWeatherReponseDTO.class.getSimpleName() + "[", "]")

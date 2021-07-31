@@ -1,7 +1,9 @@
 package com.ifood.desafiobackend.domain.service;
 
+import com.ifood.desafiobackend.domain.model.Weather;
+
 public interface WeatherService {
 
-    String findByCity();
+    Weather findByCity(final String city);
 
 }
