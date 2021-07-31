@@ -22,6 +22,8 @@ public final class Weather {
         this.updatedAt = updatedAt;
     }
 
+    public Weather() {}
+
     public UUID getId() {
         return id;
     }
