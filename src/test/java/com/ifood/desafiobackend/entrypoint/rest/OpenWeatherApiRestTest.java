@@ -13,14 +13,14 @@ import org.springframework.http.ResponseEntity;
 public class OpenWeatherApiRestTest {
 
     @Autowired
-    private OpenWeatherApiRestClient openWeatherApiRestClient;
+    private OpenWeatherApiFeignClient openWeatherApiFeignClient;
 
     @Value("${openweathermap.api.key}")
     private String apiKey;
 
     @Test
     void shouldGetWeatherByCity() {
-        final ResponseEntity<OpenWeatherReponseDTO> weatherInLondon = openWeatherApiRestClient.getWeatherByCity("London", apiKey);
+        final ResponseEntity<OpenWeatherReponseDTO> weatherInLondon = openWeatherApiFeignClient.getWeatherByCity("London", apiKey);
         Assertions.assertThat(weatherInLondon.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 }

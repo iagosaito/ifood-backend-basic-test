@@ -1,6 +1,8 @@
 package com.ifood.desafiobackend.web.controller;
 
+import com.ifood.desafiobackend.domain.model.Weather;
 import com.ifood.desafiobackend.domain.service.WeatherService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,7 +19,8 @@ public class WeatherController {
     }
 
     @GetMapping
-    public String getWeatherByCity(@RequestParam String city) {
-        return "Return data about weather in: " + city;
+    public ResponseEntity<Weather> getWeatherByCity(@RequestParam String city) {
+        final Weather weatherByCity = weatherService.findByCity(city);
+        return ResponseEntity.ok(weatherByCity);
     }
 }

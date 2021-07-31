@@ -1,5 +1,6 @@
 package com.ifood.desafiobackend.domain.model;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -10,13 +11,15 @@ public final class Weather {
     private Temperature temperature;
     private String weatherDescription;
     private Wind wind;
+    private LocalDateTime updatedAt;
 
-    public Weather(UUID id, String cityName, Temperature temperature, String weatherDescription, Wind wind) {
+    public Weather(UUID id, String cityName, Temperature temperature, String weatherDescription, Wind wind, LocalDateTime updatedAt) {
         this.id = id;
         this.cityName = cityName;
         this.temperature = temperature;
         this.weatherDescription = weatherDescription;
         this.wind = wind;
+        this.updatedAt = updatedAt;
     }
 
     public UUID getId() {
@@ -39,17 +42,8 @@ public final class Weather {
         return wind;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Weather weather = (Weather) o;
-        return Objects.equals(id, weather.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
+    public LocalDateTime getUpdatedAt() {
+        return updatedAt;
     }
 
     public static final class WeatherBuilder {
@@ -58,6 +52,7 @@ public final class Weather {
         private Temperature temperature;
         private String weatherDescription;
         private Wind wind;
+        private LocalDateTime updatedAt = LocalDateTime.now();
 
         private WeatherBuilder() {
         }
@@ -92,7 +87,20 @@ public final class Weather {
         }
 
         public Weather build() {
-            return new Weather(id, cityName, temperature, weatherDescription, wind);
+            return new Weather(id, cityName, temperature, weatherDescription, wind, updatedAt);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Weather weather = (Weather) o;
+        return Objects.equals(id, weather.id) && Objects.equals(cityName, weather.cityName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, cityName);
     }
 }
