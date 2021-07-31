@@ -1,11 +1,11 @@
 package com.ifood.desafiobackend.entrypoint.rest;
 
-import com.ifood.desafiobackend.domain.model.Weather;
-import org.springframework.stereotype.Component;
-
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+
+import com.ifood.desafiobackend.domain.model.Weather;
+import org.springframework.stereotype.Component;
 
 @Component
 public class CacheOpenWeatherApi implements OpenWeatherApi {
@@ -23,5 +23,9 @@ public class CacheOpenWeatherApi implements OpenWeatherApi {
 
     public void addWeather(final String city, final Weather weather) {
         cachedRequestWeather.put(city, weather);
+    }
+
+    public void clearCache() {
+        cachedRequestWeather.clear();
     }
 }
