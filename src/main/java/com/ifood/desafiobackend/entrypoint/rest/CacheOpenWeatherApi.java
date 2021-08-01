@@ -17,7 +17,7 @@ public class CacheOpenWeatherApi implements OpenWeatherApi {
 
     private static final Logger log = LogManager.getLogger(CacheOpenWeatherApi.class);
     private static final Map<String, Weather> CACHE_WEATHER_MAP = Collections.synchronizedMap(new HashMap<>());
-    private static final int MAX_LIMIT_MINUTES_CACHE = 15;
+    private static final int MAX_LIMIT_MINUTES_CACHE = 30;
 
     public static Map<String, Weather> getCacheWeatherMap() {
         return Collections.unmodifiableMap(CACHE_WEATHER_MAP);

@@ -16,12 +16,13 @@ import java.time.LocalDateTime;
 public class Scheduler {
 
     private static final Logger log = LogManager.getLogger(Scheduler.class);
+    private static final int THREE_MINUTES = 180000;
 
     @Autowired
     private CacheOpenWeatherApi cacheOpenWeatherApi;
 
     @Async
-    @Scheduled(fixedRate = 2000)
+    @Scheduled(fixedRate = THREE_MINUTES)
     public void cleanOutDateWeatherInCache() {
         final LocalDateTime cleanCacheEventAt = LocalDateTime.now();
         log.info("running cleaning cache job...");
