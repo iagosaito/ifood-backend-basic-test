@@ -48,6 +48,10 @@ public final class Weather {
         return updatedAt;
     }
 
+    public void setUpdatedAt(LocalDateTime updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
     public static final class WeatherBuilder {
         private UUID id;
         private String cityName;
