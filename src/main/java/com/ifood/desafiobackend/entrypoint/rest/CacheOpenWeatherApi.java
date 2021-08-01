@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -15,9 +16,12 @@ import java.util.Optional;
 public class CacheOpenWeatherApi implements OpenWeatherApi {
 
     private static final Logger log = LogManager.getLogger(CacheOpenWeatherApi.class);
-
-    private static final Map<String, Weather> CACHE_WEATHER_MAP = new HashMap<>();
+    private static final Map<String, Weather> CACHE_WEATHER_MAP = Collections.synchronizedMap(new HashMap<>());
     private static final int MAX_LIMIT_MINUTES_CACHE = 15;
+
+    public static Map<String, Weather> getCacheWeatherMap() {
+        return Collections.unmodifiableMap(CACHE_WEATHER_MAP);
+    }
 
     @Override
     public Optional<Weather> getWeatherByCity(String city) {

@@ -1,9 +1,11 @@
 package com.ifood.desafiobackend.entrypoint.rest;
 
 import com.ifood.desafiobackend.domain.model.Weather;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -18,9 +20,15 @@ public class CacheOpenWeatherApiTest {
 
     @BeforeEach
     void setUp() {
-        cacheOpenWeatherApi.addWeather(LONDON_CITY, new Weather());
-        cacheOpenWeatherApi.addWeather(SAO_PAULO_CITY, new Weather());
-        cacheOpenWeatherApi.addWeather(NEY_YORK_CITY, new Weather());
+        final Weather weather = Weather.WeatherBuilder.aWeather().build();
+        cacheOpenWeatherApi.addWeather(LONDON_CITY, weather);
+        cacheOpenWeatherApi.addWeather(SAO_PAULO_CITY, weather);
+        cacheOpenWeatherApi.addWeather(NEY_YORK_CITY, weather);
+    }
+
+    @AfterEach
+    void cleanCache() {
+        cacheOpenWeatherApi.clearCache();
     }
 
     @Test
@@ -37,8 +45,38 @@ public class CacheOpenWeatherApiTest {
     @Test
     void shouldNotFoundWeatherInCache() {
         final Optional<Weather> tokioWeather = cacheOpenWeatherApi.getWeatherByCity("Tókio");
-
         assertThat(tokioWeather.isPresent()).isFalse();
+    }
+
+    @Test
+    void shouldClearWeatherInCacheOlderThanMaxLimit() {
+
+        // arrange
+        final byte numberOfCitiesInCacheExpected = 3;
+        final Weather weather = new Weather();
+        weather.setUpdatedAt(LocalDateTime.now().minusMinutes(15));
+        cacheOpenWeatherApi.addWeather("RIO_DE_JANEIRO", weather);
+
+        // act
+        cacheOpenWeatherApi.cleanOutDatedCache(LocalDateTime.now());
+
+        // assert
+        assertThat(CacheOpenWeatherApi.getCacheWeatherMap().size()).isEqualTo(numberOfCitiesInCacheExpected);
+    }
+
+    @Test
+    void shouldNotClearWeatherInCacheLessThanMaxLimit() {
+        // arrange
+        final byte numberOfCitiesInCacheExpected = 4;
+        final Weather weather = new Weather();
+        weather.setUpdatedAt(LocalDateTime.now().minusMinutes(14));
+        cacheOpenWeatherApi.addWeather("RIO_DE_JANEIRO", weather);
+
+        // act
+        cacheOpenWeatherApi.cleanOutDatedCache(LocalDateTime.now());
+
+        // assert
+        assertThat(CacheOpenWeatherApi.getCacheWeatherMap().size()).isEqualTo(numberOfCitiesInCacheExpected);
     }
 
 }
