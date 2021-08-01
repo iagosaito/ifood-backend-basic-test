@@ -1,6 +1,8 @@
 package com.ifood.desafiobackend.entrypoint.rest;
 
 import com.ifood.desafiobackend.domain.model.Weather;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -11,6 +13,8 @@ import java.util.Optional;
 
 @Component
 public class CacheOpenWeatherApi implements OpenWeatherApi {
+
+    private static final Logger log = LogManager.getLogger(CacheOpenWeatherApi.class);
 
     private static final Map<String, Weather> CACHE_WEATHER_MAP = new HashMap<>();
     private static final int MAX_LIMIT_MINUTES_CACHE = 15;
@@ -39,6 +43,7 @@ public class CacheOpenWeatherApi implements OpenWeatherApi {
         for (Map.Entry<String, Weather> weatherEntry : cachedWeatherMap.entrySet()) {
             final LocalDateTime updatedAt = weatherEntry.getValue().getUpdatedAt();
             if (isCacheOutOfDate(cleanCacheEventAt, updatedAt)) {
+                log.info("removing {} from cache", weatherEntry.getKey());
                 CACHE_WEATHER_MAP.remove(weatherEntry.getKey(), weatherEntry.getValue());
             }
         }
@@ -46,6 +51,6 @@ public class CacheOpenWeatherApi implements OpenWeatherApi {
 
     private boolean isCacheOutOfDate(final LocalDateTime cleanEvent, final LocalDateTime lastUpdatedAt) {
         final long minutes = Math.abs(ChronoUnit.MINUTES.between(cleanEvent, lastUpdatedAt));
-        return minutes > MAX_LIMIT_MINUTES_CACHE;
+        return minutes >= MAX_LIMIT_MINUTES_CACHE;
     }
 }
