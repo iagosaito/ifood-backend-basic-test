@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.HttpClientErrorException;
 
 @Service
 public final class WeatherServiceImpl implements WeatherService {
@@ -56,6 +57,6 @@ public final class WeatherServiceImpl implements WeatherService {
             return weather;
         }
 
-        throw new RuntimeException(); // TODO: Corrigir para exception correta
+        throw new HttpClientErrorException(responseWeatherApi.getStatusCode());
     }
 }
