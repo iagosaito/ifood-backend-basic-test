@@ -1,5 +1,8 @@
 package com.ifood.desafiobackend.web.controller;
 
+import java.time.Duration;
+import java.util.function.Supplier;
+
 import com.ifood.desafiobackend.domain.model.Weather;
 import com.ifood.desafiobackend.domain.service.WeatherService;
 import io.github.resilience4j.circuitbreaker.CircuitBreaker;
@@ -16,28 +19,37 @@ import org.springframework.web.bind.annotation.RestController;
 public class WeatherController {
 
     private final WeatherService weatherService;
+    private final CircuitBreaker circuitBreaker;
 
     public WeatherController(WeatherService weatherService) {
         this.weatherService = weatherService;
+
+        CircuitBreakerConfig config = CircuitBreakerConfig
+                .custom()
+                .slidingWindowType(CircuitBreakerConfig.SlidingWindowType.COUNT_BASED)
+                .slidingWindowSize(4)
+                .slowCallRateThreshold(50.0f)
+                .slowCallDurationThreshold(Duration.ofSeconds(2))
+                .build();
+
+        CircuitBreakerRegistry registry = CircuitBreakerRegistry.of(config);
+        this.circuitBreaker = registry.circuitBreaker("weatherservice");
     }
 
     @GetMapping
     public ResponseEntity<Weather> getWeatherByCity(@RequestParam String city) {
 
-        CircuitBreakerRegistry circuitBreakerRegistry = CircuitBreakerRegistry.ofDefaults();
-        CircuitBreakerConfig defaultConfig = circuitBreakerRegistry.getDefaultConfig();
+        try {
+            final Supplier<Weather> weatherSupplier = circuitBreaker.decorateSupplier(() ->
+                    weatherService.findByCity(city));
 
-        CircuitBreakerConfig overwrittenConfig = CircuitBreakerConfig
-                .from(defaultConfig)
-                .failureRateThreshold(50)
-                .minimumNumberOfCalls(4)
-                .build();
+            final Weather weather = weatherSupplier.get();
 
-        final CircuitBreaker circuitBreaker = circuitBreakerRegistry.circuitBreaker("app", overwrittenConfig);
+            return ResponseEntity.ok(weather);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
 
-        final Weather weather = CircuitBreaker.decorateSupplier(circuitBreaker, () -> weatherService.findByCity(city))
-                .get();
-
-        return ResponseEntity.ok(weather);
+        return null;
     }
 }
