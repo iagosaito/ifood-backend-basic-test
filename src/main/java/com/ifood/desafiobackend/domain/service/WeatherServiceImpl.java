@@ -1,6 +1,5 @@
 package com.ifood.desafiobackend.domain.service;
 
-import java.time.Duration;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -15,6 +14,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.client.HttpClientErrorException;
 
 @Service
 public final class WeatherServiceImpl implements WeatherService {
@@ -35,12 +35,6 @@ public final class WeatherServiceImpl implements WeatherService {
 
     @Override
     public Weather findByCity(final String city) {
-
-        try {
-            Thread.sleep(Duration.ofSeconds(2).toMillis());
-        } catch (InterruptedException e) {
-            throw new RuntimeException();
-        }
 
         if (!StringUtils.hasText(city)) {
             throw new IllegalArgumentException("'city' cannot be null");
@@ -63,6 +57,6 @@ public final class WeatherServiceImpl implements WeatherService {
             return weather;
         }
 
-        throw new RuntimeException(); // TODO: Corrigir para exception correta
+        throw new HttpClientErrorException(responseWeatherApi.getStatusCode());
     }
 }
