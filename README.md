@@ -8,6 +8,11 @@ Repositório para resolução do desafio da empresa iFood em: https://github.com
 - Resilience4j
 - Spring Open Feign
 
+## Como executar?
+
+    docker build -t ifood-desafio-backend .
+    docker run -p 8080:8080 ifood-desafio-backend
+
 ## Como funciona?
 A aplicação é uma API que consiste em basicamente dois endpoints que retornam informações respeito do clima:
 
@@ -94,4 +99,4 @@ serão rejeitadas automaticamente, lançando HttpClientErrorException com status
 - Incluir mais ferramentas de tolerância a falhas, como retry, fallbacks e demais funcionalidades disponíveis no 
   Resilience4j.
 - Testes de carga para verificar o comportamento da aplicação lidando com requisições concorrentes.
-- Dockerizar a aplicação (Em andamento...)
+- Dockerizar a aplicação (DONE)
