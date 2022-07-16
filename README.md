@@ -98,5 +98,5 @@ serão rejeitadas automaticamente, lançando HttpClientErrorException com status
 - Pensar numa estrutura de Cache mais robusta a partir de uma biblioteca específica.
 - Incluir mais ferramentas de tolerância a falhas, como retry, fallbacks e demais funcionalidades disponíveis no 
   Resilience4j.
-- Testes de carga para verificar o comportamento da aplicação lidando com requisições concorrentes.
+- Testes de carga para verificar o comportamento da aplicação lidando com requisições concorrentes (In Progress).
 - Dockerizar a aplicação (DONE)
