@@ -57,7 +57,7 @@ Para evitar que a aplicação faça requisições desnecessárias ao OpenWeather
 Cache utilizando um SyncronizedHashMap, armazenando a cidade como key e o seu respetivo clima como value. 
 
 ### Mecanismo de limpeza 
-A cada três minutos o job de limpeza é executado. O job irá percorrer por todo o mapa verificando se há algum elemento 
+A cada três minutos o job de limpeza é executado. O job percorrerá todo o mapa verificando se há algum elemento 
 no mapa cuja atualização esteja ultrapassada — considere um elemento como ultrapassado aquele cuja última 
 atualização se deu a mais de 30 minutos da execução do job.
 
@@ -89,9 +89,9 @@ O CircuitBreaker da aplicação possui as seguintes configurações:
                 .waitDurationInOpenState(Duration.ofSeconds(10))
                 .build();
 
-O CircuitBreaker irá ser ativado caso metade das requisições responderem num tempo maior que 2 segundos. A partir disso,
+O CircuitBreaker será ativado caso metade das requisições responderem num tempo maior que 2 segundos. A partir disso,
 o Breaker estará no estado de OPEN durante 10 segundos. Isso significa que qualquer requisição durante estes 10 segundos
-serão rejeitadas automaticamente, lançando HttpClientErrorException com status 500 (INTERNAL_SERVER_ERROR).
+será rejeitadas automaticamente, lançando HttpClientErrorException com status 500 (INTERNAL_SERVER_ERROR).
 
 ## Pontos de melhoria
 
